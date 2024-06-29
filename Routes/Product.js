@@ -36,7 +36,7 @@ const cpUpload = upload.fields([
 ]);
 
 router.post("/create", cpUpload, createProduct);
-router.get("/getall", getAllProducts);
+router.get("/getall", getAllProducts); // Ensure this route is defined
 router.get("/featured", getFeaturedProducts);
 router.get("/latest", getLatestProducts);
 router.get("/:id", getSingleProductById);

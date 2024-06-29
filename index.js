@@ -1,12 +1,12 @@
 // index.js
 
 import express from "express";
-import cors from "cors"; // Import CORS
+import cors from "cors";
 import productRoutes from "./Routes/Product.js";
 import inquiryRoutes from "./Routes/Inquiry.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import dbConnection from "./Models/DB.js"; // Corrected path
+import dbConnection from "./Models/DB.js";
 import nodemailer from "nodemailer";
 
 const app = express();
@@ -15,14 +15,9 @@ const port = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Use CORS middleware
 app.use(cors());
-
-// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Serve static files
 app.use(
   "/public/photos",
   express.static(path.join(__dirname, "public/photos"))
@@ -35,8 +30,8 @@ dbConnection();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "sureshkhetani1111@gmail.com", // Your Gmail address
-    pass: "aura cccz ppjk mzkp", // Your Gmail password or App-Specific Password
+    user: "sureshkhetani1111@gmail.com",
+    pass: "aura cccz ppjk mzkp",
   },
 });
 
@@ -50,9 +45,8 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-// Start the server
 app.listen(port, () => {
   console.log("Server is running on port", port);
 });
 
-export { transporter }; // Export transporter for use in other modules
+export { transporter };
