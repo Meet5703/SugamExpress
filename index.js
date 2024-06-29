@@ -1,6 +1,7 @@
 // index.js
 
 import express from "express";
+import cors from "cors"; // Import CORS
 import productRoutes from "./Routes/Product.js";
 import inquiryRoutes from "./Routes/Inquiry.js";
 import path from "path";
@@ -14,8 +15,14 @@ const port = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Use CORS middleware
+app.use(cors());
+
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files
 app.use(
   "/public/photos",
   express.static(path.join(__dirname, "public/photos"))
@@ -43,6 +50,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+// Start the server
 app.listen(port, () => {
   console.log("Server is running on port", port);
 });
