@@ -34,8 +34,14 @@ const createProduct = async (req, res, next) => {
       });
     }
 
-    const photo = req.files.photo[0].path;
-    const photos = req.files.photos.map((file) => file.path);
+    const photo = req.files.photo[0].path; // Assuming this is the path to the main photo
+    const photos = req.files.photos.map((file) => file.path); // Paths to additional photos
+
+    // Transform paths to URLs accessible from the client
+    const photoURL = `https://sugamexpress.onrender.com/${photo}`;
+    const photosURLs = photos.map(
+      (path) => `https://sugamexpress.onrender.com/${path}`
+    );
 
     if (photos.length < 2) {
       return res.status(400).json({
@@ -47,9 +53,9 @@ const createProduct = async (req, res, next) => {
     const newProduct = new ProductData({
       title,
       description,
-      photo,
+      photo: photoURL, // Store photo URL instead of path
       detailedDescription,
-      photos,
+      photos: photosURLs, // Store photos URLs instead of paths
       category,
       isFeatured,
       colorOfPart,
