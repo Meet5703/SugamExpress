@@ -3,7 +3,6 @@ import ProductData from "../Models/Schemas/ProductSchema.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import upload from "../Middlewares/multerConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,55 +34,32 @@ const createProduct = async (req, res, next) => {
       });
     }
 
-    // Middleware usage with upload.array('photos') for handling multiple files
-    upload.array("photos")(req, res, async function (err) {
-      if (err instanceof multer.MulterError) {
-        // A Multer error occurred when uploading
-        return res.status(500).json({
-          status: "error",
-          message: "Error uploading files",
-        });
-      } else if (err) {
-        // An unknown error occurred
-        return res.status(500).json({
-          status: "error",
-          message: "An unknown error occurred",
-        });
-      }
+    const photo = req.files.photo[0].path;
+    const photos = req.files.photos.map((file) => file.path);
 
-      const photo = req.files.photo[0].path; // Assuming this is the path to the main photo
-      const photos = req.files.photos.map((file) => file.path); // Paths to additional photos
-
-      // Transform paths to URLs accessible from the client
-      const photoURL = `https://sugamexpress.onrender.com/${photo}`;
-      const photosURLs = photos.map(
-        (path) => `https://sugamexpress.onrender.com/${path}`
-      );
-
-      if (photos.length < 2) {
-        return res.status(400).json({
-          status: "error",
-          message: "At least 2 photos are required",
-        });
-      }
-
-      const newProduct = new ProductData({
-        title,
-        description,
-        photo: photoURL, // Store photo URL instead of path
-        detailedDescription,
-        photos: photosURLs, // Store photos URLs instead of paths
-        category,
-        isFeatured,
-        colorOfPart,
+    if (photos.length < 2) {
+      return res.status(400).json({
+        status: "error",
+        message: "At least 2 photos are required",
       });
+    }
 
-      await newProduct.save();
+    const newProduct = new ProductData({
+      title,
+      description,
+      photo,
+      detailedDescription,
+      photos,
+      category,
+      isFeatured,
+      colorOfPart,
+    });
 
-      res.status(201).json({
-        status: "success",
-        message: "Product created successfully",
-      });
+    await newProduct.save();
+
+    res.status(201).json({
+      status: "success",
+      message: "Product created successfully",
     });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -147,19 +123,19 @@ const updateSingleProduct = async (req, res, next) => {
       colorOfPart,
     };
 
-    // Check and update the main photo
-    if (req.file) {
-      // Delete the old main photo
+    // Check and update the photo
+    if (req.files && req.files.photo) {
+      // Delete the old photo
       if (existingProduct.photo) {
         const oldPhotoPath = path.join(__dirname, "../", existingProduct.photo);
         fs.unlink(oldPhotoPath, (err) => {
           if (err) console.error("Error deleting old photo:", err);
         });
       }
-      updatedFields.photo = req.file.path;
+      updatedFields.photo = req.files.photo[0].path;
     }
 
-    // Check and update additional photos
+    // Check and update the photos
     if (req.files && req.files.photos) {
       const photos = req.files.photos.map((file) => file.path);
       if (photos.length < 2) {
