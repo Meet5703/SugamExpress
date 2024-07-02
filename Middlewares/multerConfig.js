@@ -1,24 +1,39 @@
 import multer from "multer";
 import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// Set up storage engine
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../public/photos"));
+  destination: (req, file, cb) => {
+    cb(null, "public/photos");
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
-const upload = multer({ storage: storage });
+// Check file type
+const checkFileType = (file, cb) => {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = filetypes.test(file.mimetype);
 
-const cpUpload = upload.fields([
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb("Error: Images Only!");
+  }
+};
+
+// Init upload
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: (req, file, cb) => {
+    checkFileType(file, cb);
+  },
+}).fields([
   { name: "photo", maxCount: 1 },
   { name: "photos", maxCount: 10 },
 ]);
 
-export default cpUpload;
+export default upload;
