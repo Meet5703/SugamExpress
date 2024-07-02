@@ -23,8 +23,9 @@ const createProduct = async (req, res, next) => {
       !title ||
       !description ||
       !req.files ||
-      !detailedDescription ||
+      !req.files.photo ||
       !req.files.photos ||
+      !detailedDescription ||
       !category ||
       !colorOfPart
     ) {
@@ -34,8 +35,8 @@ const createProduct = async (req, res, next) => {
       });
     }
 
-    const photo = req.files.photo[0].path;
-    const photos = req.files.photos.map((file) => file.path);
+    const photo = req.files.photo[0].filename; // Save only the filename
+    const photos = req.files.photos.map((file) => file.filename); // Save only the filenames
 
     if (photos.length < 2) {
       return res.status(400).json({
@@ -94,6 +95,7 @@ const getSingleProductById = async (req, res, next) => {
       });
     }
     res.status(200).json(product);
+    return product;
   } catch (error) {
     next(error);
   }
