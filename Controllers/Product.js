@@ -87,16 +87,7 @@ const getAllProducts = async (req, res, next) => {
 const getSingleProductById = async (req, res, next) => {
   dbConnection();
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        status: "error",
-        message: "Invalid product ID",
-      });
-    }
-
-    const product = await ProductData.findById(id);
+    const product = await ProductData.findById(req.params.id);
     if (!product) {
       return res.status(404).json({
         status: "error",
@@ -104,6 +95,7 @@ const getSingleProductById = async (req, res, next) => {
       });
     }
     res.status(200).json(product);
+    return product;
   } catch (error) {
     next(error);
   }
