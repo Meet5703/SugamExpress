@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: false, // Default to not featured
   },
+  isExclusive: {
+    type: Boolean,
+    default: false, // Default to not featured
+  },
   createdAt: {
     type: Date,
     default: Date.now,
