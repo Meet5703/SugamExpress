@@ -9,12 +9,11 @@ import {
   getFeaturedProducts,
   getLatestProducts,
 } from "../Controllers/Product.js";
-import upload from "../Middlewares/multerConfig.js"; // Import the upload middleware
-
+import upload from "../Middlewares/multerConfig.js";
 const router = express.Router();
 
 router.post("/create", upload, createProduct);
-router.get("/", getAllProducts);
+router.get("/getall", getAllProducts);
 router.get("/:id", getSingleProductById);
 router.put("/:id", upload, updateSingleProduct);
 router.delete("/:id", deleteSingleProduct);

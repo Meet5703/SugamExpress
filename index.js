@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import productRoutes from "./Routes/Product.js";
-import inquiryRoutes from "./Routes/Inquiry.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import productRoutes from "./Routes/Product.js";
+import inquiryRoutes from "./Routes/Inquiry.js";
 import dbConnection from "./Models/DB.js";
 import nodemailer from "nodemailer";
 
@@ -13,6 +13,7 @@ const port = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Middleware setup
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -39,7 +40,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Routes
+// Routes setup
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/inquiry", inquiryRoutes);
 
@@ -49,8 +50,9 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
+// Start server
 app.listen(port, () => {
-  console.log("Server is running on port", port);
+  console.log(`Server is running on port ${port}`);
 });
 
 export { transporter };

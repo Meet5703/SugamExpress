@@ -8,6 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const createProduct = async (req, res, next) => {
+  console.log(req.body); // log the body
+  console.log(req.files); // log the files
+
   dbConnection();
   try {
     const {

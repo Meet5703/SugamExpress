@@ -18,16 +18,16 @@ const checkFileType = (file, cb) => {
   const mimetype = filetypes.test(file.mimetype);
 
   if (extname && mimetype) {
-    return cb(null, true);
+    cb(null, true);
   } else {
-    cb("Error: Images Only!");
+    cb(new Error("Error: Images Only!"));
   }
 };
 
 // Init upload
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1000000 },
+  limits: { fileSize: 100000000 },
   fileFilter: (req, file, cb) => {
     checkFileType(file, cb);
   },
