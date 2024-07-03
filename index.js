@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 // Middleware setup
 app.use(
   cors({
-    origin: "https://sugamexpress.onrender.com",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   })
