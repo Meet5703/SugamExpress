@@ -16,7 +16,7 @@ const __dirname = path.dirname(__filename);
 // Middleware setup
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://sugam-sigma.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"],
   })
